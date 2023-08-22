@@ -1,332 +1,215 @@
-{
-  "openapi": "3.0.0",
-  "info": {
-    "title": "Kibana OpenAPI spec",
-    "version": "0.0.0"
-  },
-  "servers": [
-    {
-      "url": "/"
-    }
-  ],
-  "paths": {
-    "/api/alerting/rule/{id}": {
-      "put": {
-        "requestBody": {
-          "content": {
-            "application/json; Elastic-Api-Version=2023-10-31": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "The name of the rule."
-                  },
-                  "tags": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "schedule": {
-                    "type": "object",
-                    "properties": {
-                      "interval": {
-                        "type": "string"
-                      }
-                    },
-                    "required": [
-                      "interval"
-                    ],
-                    "additionalProperties": false
-                  },
-                  "throttle": {
-                    "anyOf": [
-                      {
-                        "not": {}
-                      },
-                      {
-                        "type": "string"
-                      }
-                    ],
-                    "nullable": true
-                  },
-                  "params": {
-                    "type": "object",
-                    "additionalProperties": {}
-                  },
-                  "actions": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "group": {
-                          "type": "string"
-                        },
-                        "id": {
-                          "type": "string"
-                        },
-                        "frequency": {
-                          "type": "object",
-                          "properties": {
-                            "summary": {
-                              "type": "boolean"
-                            },
-                            "notify_when": {
-                              "type": "string",
-                              "enum": [
-                                "onActionGroupChange",
-                                "onActiveAlert",
-                                "onThrottleInterval"
-                              ]
-                            },
-                            "throttle": {
-                              "type": "string",
-                              "nullable": true
-                            }
-                          },
-                          "required": [
-                            "summary",
-                            "notify_when",
-                            "throttle"
-                          ],
-                          "additionalProperties": false
-                        },
-                        "params": {
-                          "type": "object",
-                          "additionalProperties": {}
-                        },
-                        "uuid": {
-                          "type": "string"
-                        },
-                        "alerts_filter": {
-                          "type": "object",
-                          "properties": {
-                            "query": {
-                              "type": "object",
-                              "properties": {
-                                "kql": {
-                                  "type": "string"
-                                },
-                                "filters": {
-                                  "type": "array",
-                                  "items": {
-                                    "type": "object",
-                                    "properties": {
-                                      "query": {
-                                        "type": "object",
-                                        "additionalProperties": {}
-                                      },
-                                      "meta": {
-                                        "type": "object",
-                                        "additionalProperties": {}
-                                      },
-                                      "state$": {
-                                        "type": "object",
-                                        "properties": {
-                                          "store": {
-                                            "type": "string"
-                                          }
-                                        },
-                                        "required": [
-                                          "store"
-                                        ],
-                                        "additionalProperties": false
-                                      }
-                                    },
-                                    "required": [
-                                      "meta"
-                                    ],
-                                    "additionalProperties": false
-                                  }
-                                },
-                                "dsl": {
-                                  "type": "string"
-                                }
-                              },
-                              "required": [
-                                "kql",
-                                "filters"
-                              ],
-                              "additionalProperties": false
-                            },
-                            "timeframe": {
-                              "type": "object",
-                              "properties": {
-                                "days": {
-                                  "type": "array",
-                                  "items": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          1
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          2
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          3
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          4
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          5
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          6
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          7
-                                        ]
-                                      }
-                                    ]
-                                  }
-                                },
-                                "hours": {
-                                  "type": "object",
-                                  "properties": {
-                                    "start": {
-                                      "type": "string"
-                                    },
-                                    "end": {
-                                      "type": "string"
-                                    }
-                                  },
-                                  "required": [
-                                    "start",
-                                    "end"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                "timezone": {
-                                  "type": "string"
-                                }
-                              },
-                              "required": [
-                                "days",
-                                "hours",
-                                "timezone"
-                              ],
-                              "additionalProperties": false
-                            }
-                          },
-                          "additionalProperties": false
-                        }
-                      },
-                      "required": [
-                        "group",
-                        "id",
-                        "params"
-                      ],
-                      "additionalProperties": false
-                    },
-                    "default": []
-                  },
-                  "notify_when": {
-                    "type": "string",
-                    "enum": [
-                      "onActionGroupChange",
-                      "onActiveAlert",
-                      "onThrottleInterval"
-                    ],
-                    "nullable": true
-                  }
-                },
-                "required": [
-                  "name",
-                  "tags",
-                  "schedule",
-                  "params"
-                ],
-                "additionalProperties": false,
-                "description": "Update rule request"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Update a rule",
-            "content": {
-              "application/json; Elastic-Api-Version=2023-10-31": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "connector_type_id": {
-                      "type": "string",
-                      "description": "The type of connector. This property appears in responses but cannot be set in requests."
-                    },
-                    "group": {
-                      "type": "string",
-                      "description": "The group name for the actions. If you don't need to group actions, set to `default`."
-                    },
-                    "id": {
-                      "type": "string",
-                      "description": "The identifier for the connector saved object."
-                    },
-                    "uuid": {
-                      "type": "string",
-                      "description": "A universally unique identifier (UUID) for the action."
-                    },
-                    "params": {
-                      "type": "object",
-                      "additionalProperties": {},
-                      "description": "The parameters for the action, which are sent to the connector. The `params` are handled as Mustache templates and passed a default set of context."
-                    }
-                  },
-                  "required": [
-                    "connector_type_id",
-                    "group",
-                    "id",
-                    "uuid",
-                    "params"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "operationId": "/api/alerting/rule/{id}#0"
-      }
-    }
-  },
-  "security": [
-    {
-      "basicAuth": []
-    },
-    {
-      "apiKeyAuth": []
-    }
-  ]
-}
+openapi: 3.0.0
+info:
+  title: Kibana OpenAPI spec
+  version: 0.0.0
+servers:
+  - url: /
+paths:
+  /api/alerting/rule/{id}:
+    put:
+      requestBody:
+        content:
+          application/json; Elastic-Api-Version=2023-10-31:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the rule.
+                tags:
+                  type: array
+                  items:
+                    type: string
+                schedule:
+                  type: object
+                  properties:
+                    interval:
+                      type: string
+                  required:
+                    - interval
+                  additionalProperties: false
+                throttle:
+                  anyOf:
+                    - not: {}
+                    - type: string
+                  nullable: true
+                params:
+                  type: object
+                  additionalProperties: {}
+                actions:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      group:
+                        type: string
+                      id:
+                        type: string
+                      frequency:
+                        type: object
+                        properties:
+                          summary:
+                            type: boolean
+                          notify_when:
+                            type: string
+                            enum:
+                              - onActionGroupChange
+                              - onActiveAlert
+                              - onThrottleInterval
+                          throttle:
+                            type: string
+                            nullable: true
+                        required:
+                          - summary
+                          - notify_when
+                          - throttle
+                        additionalProperties: false
+                      params:
+                        type: object
+                        additionalProperties: {}
+                      uuid:
+                        type: string
+                      alerts_filter:
+                        type: object
+                        properties:
+                          query:
+                            type: object
+                            properties:
+                              kql:
+                                type: string
+                              filters:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    query:
+                                      type: object
+                                      additionalProperties: {}
+                                    meta:
+                                      type: object
+                                      additionalProperties: {}
+                                    state$:
+                                      type: object
+                                      properties:
+                                        store:
+                                          type: string
+                                      required:
+                                        - store
+                                      additionalProperties: false
+                                  required:
+                                    - meta
+                                  additionalProperties: false
+                              dsl:
+                                type: string
+                            required:
+                              - kql
+                              - filters
+                            additionalProperties: false
+                          timeframe:
+                            type: object
+                            properties:
+                              days:
+                                type: array
+                                items:
+                                  anyOf:
+                                    - type: number
+                                      enum:
+                                        - 1
+                                    - type: number
+                                      enum:
+                                        - 2
+                                    - type: number
+                                      enum:
+                                        - 3
+                                    - type: number
+                                      enum:
+                                        - 4
+                                    - type: number
+                                      enum:
+                                        - 5
+                                    - type: number
+                                      enum:
+                                        - 6
+                                    - type: number
+                                      enum:
+                                        - 7
+                              hours:
+                                type: object
+                                properties:
+                                  start:
+                                    type: string
+                                  end:
+                                    type: string
+                                required:
+                                  - start
+                                  - end
+                                additionalProperties: false
+                              timezone:
+                                type: string
+                            required:
+                              - days
+                              - hours
+                              - timezone
+                            additionalProperties: false
+                        additionalProperties: false
+                    required:
+                      - group
+                      - id
+                      - params
+                    additionalProperties: false
+                  default: []
+                notify_when:
+                  type: string
+                  enum:
+                    - onActionGroupChange
+                    - onActiveAlert
+                    - onThrottleInterval
+                  nullable: true
+              required:
+                - name
+                - tags
+                - schedule
+                - params
+              additionalProperties: false
+              description: Update rule request
+      responses:
+        '200':
+          description: Update a rule
+          content:
+            application/json; Elastic-Api-Version=2023-10-31:
+              schema:
+                type: object
+                properties:
+                  connector_type_id:
+                    type: string
+                    description: The type of connector. This property appears in responses but cannot be set in requests.
+                  group:
+                    type: string
+                    description: The group name for the actions. If you don't need to group actions, set to `default`.
+                  id:
+                    type: string
+                    description: The identifier for the connector saved object.
+                  uuid:
+                    type: string
+                    description: A universally unique identifier (UUID) for the action.
+                  params:
+                    type: object
+                    additionalProperties: {}
+                    description: The parameters for the action, which are sent to the connector. The `params` are handled as Mustache templates and passed a default set of context.
+                required:
+                  - connector_type_id
+                  - group
+                  - id
+                  - uuid
+                  - params
+                additionalProperties: false
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      operationId: /api/alerting/rule/{id}#0
+security:
+  - basicAuth: []
+  - apiKeyAuth: []
