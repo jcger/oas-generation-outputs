@@ -11,492 +11,6 @@
   ],
   "paths": {
     "/api/alerting/rule/{id}": {
-      "put": {
-        "requestBody": {
-          "content": {
-            "application/json; Elastic-Api-Version=2023-10-31": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "The name of the rule."
-                  },
-                  "tags": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "schedule": {
-                    "type": "object",
-                    "properties": {
-                      "interval": {
-                        "type": "string"
-                      }
-                    },
-                    "required": [
-                      "interval"
-                    ],
-                    "additionalProperties": false
-                  },
-                  "throttle": {
-                    "anyOf": [
-                      {
-                        "not": {},
-                        "anyOf": [
-                          {
-                            "not": {}
-                          },
-                          {
-                            "type": "string"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ],
-                    "nullable": true
-                  },
-                  "params": {
-                    "type": "object",
-                    "additionalProperties": {},
-                    "anyOf": [
-                      {
-                        "type": "object",
-                        "properties": {
-                          "index": {
-                            "anyOf": [
-                              {
-                                "type": "string",
-                                "minLength": 1
-                              },
-                              {
-                                "type": "array",
-                                "items": {
-                                  "type": "string",
-                                  "minLength": 1
-                                },
-                                "minItems": 1
-                              }
-                            ],
-                            "description": "name of the indices to search"
-                          },
-                          "timeField": {
-                            "type": "string",
-                            "minLength": 1,
-                            "description": "field in index used for date/time"
-                          },
-                          "aggType": {
-                            "type": "string",
-                            "description": "aggregation type"
-                          },
-                          "aggField": {
-                            "type": "string",
-                            "minLength": 1,
-                            "description": "aggregation field"
-                          },
-                          "groupBy": {
-                            "type": "string",
-                            "description": "how to group"
-                          },
-                          "termField": {
-                            "type": "string",
-                            "minLength": 1,
-                            "description": "field to group on (for groupBy: top)"
-                          },
-                          "filterKuery": {
-                            "type": "string",
-                            "description": "filter field"
-                          },
-                          "termSize": {
-                            "type": "number",
-                            "minimum": 1,
-                            "description": "limit on the number of groups returned"
-                          },
-                          "timeWindowSize": {
-                            "type": "number",
-                            "minimum": 1,
-                            "description": "size of the time window for date range aggregations"
-                          },
-                          "timeWindowUnit": {
-                            "type": "string",
-                            "description": "units of the time window for date range aggregations"
-                          },
-                          "thresholdComparator": {
-                            "type": "string",
-                            "enum": [
-                              "gt",
-                              "lt",
-                              "gte",
-                              "lte",
-                              "between",
-                              "not_between"
-                            ],
-                            "description": "the comparison function to use to determine if the threshold has been met"
-                          },
-                          "threshold": {
-                            "type": "array",
-                            "items": {
-                              "type": "number"
-                            },
-                            "minItems": 1,
-                            "maxItems": 2,
-                            "description": "the values to use as the threshold"
-                          }
-                        },
-                        "required": [
-                          "index",
-                          "timeField",
-                          "aggType",
-                          "groupBy",
-                          "timeWindowSize",
-                          "timeWindowUnit",
-                          "thresholdComparator",
-                          "threshold"
-                        ],
-                        "additionalProperties": false
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "sloId": {
-                            "type": "string"
-                          },
-                          "burnRateThreshold": {
-                            "type": "number"
-                          },
-                          "maxBurnRateThreshold": {
-                            "type": "number"
-                          },
-                          "longWindow": {
-                            "type": "object",
-                            "properties": {
-                              "value": {
-                                "type": "number"
-                              },
-                              "unit": {
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "value",
-                              "unit"
-                            ],
-                            "additionalProperties": false
-                          },
-                          "shortWindow": {
-                            "$ref": "#/properties/params/anyOf/1/properties/longWindow"
-                          }
-                        },
-                        "required": [
-                          "sloId",
-                          "burnRateThreshold",
-                          "maxBurnRateThreshold",
-                          "longWindow",
-                          "shortWindow"
-                        ],
-                        "additionalProperties": false
-                      }
-                    ]
-                  },
-                  "actions": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "group": {
-                          "type": "string"
-                        },
-                        "id": {
-                          "type": "string"
-                        },
-                        "frequency": {
-                          "type": "object",
-                          "properties": {
-                            "summary": {
-                              "type": "boolean"
-                            },
-                            "notify_when": {
-                              "type": "string",
-                              "enum": [
-                                "onActionGroupChange",
-                                "onActiveAlert",
-                                "onThrottleInterval"
-                              ]
-                            },
-                            "throttle": {
-                              "type": "string",
-                              "nullable": true,
-                              "anyOf": [
-                                {
-                                  "type": "string"
-                                },
-                                {
-                                  "type": "null"
-                                }
-                              ]
-                            }
-                          },
-                          "required": [
-                            "summary",
-                            "notify_when",
-                            "throttle"
-                          ],
-                          "additionalProperties": false
-                        },
-                        "params": {
-                          "type": "object",
-                          "additionalProperties": {}
-                        },
-                        "uuid": {
-                          "type": "string"
-                        },
-                        "alerts_filter": {
-                          "type": "object",
-                          "properties": {
-                            "query": {
-                              "type": "object",
-                              "properties": {
-                                "kql": {
-                                  "type": "string"
-                                },
-                                "filters": {
-                                  "type": "array",
-                                  "items": {
-                                    "type": "object",
-                                    "properties": {
-                                      "query": {
-                                        "type": "object",
-                                        "additionalProperties": {}
-                                      },
-                                      "meta": {
-                                        "type": "object",
-                                        "additionalProperties": {}
-                                      },
-                                      "state$": {
-                                        "type": "object",
-                                        "properties": {
-                                          "store": {
-                                            "type": "string"
-                                          }
-                                        },
-                                        "required": [
-                                          "store"
-                                        ],
-                                        "additionalProperties": false
-                                      }
-                                    },
-                                    "required": [
-                                      "meta"
-                                    ],
-                                    "additionalProperties": false
-                                  }
-                                },
-                                "dsl": {
-                                  "type": "string"
-                                }
-                              },
-                              "required": [
-                                "kql",
-                                "filters"
-                              ],
-                              "additionalProperties": false
-                            },
-                            "timeframe": {
-                              "type": "object",
-                              "properties": {
-                                "days": {
-                                  "type": "array",
-                                  "items": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          1
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          2
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          3
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          4
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          5
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          6
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          7
-                                        ]
-                                      }
-                                    ],
-                                    "type": "number",
-                                    "enum": [
-                                      1,
-                                      2,
-                                      3,
-                                      4,
-                                      5,
-                                      6,
-                                      7
-                                    ]
-                                  }
-                                },
-                                "hours": {
-                                  "type": "object",
-                                  "properties": {
-                                    "start": {
-                                      "type": "string"
-                                    },
-                                    "end": {
-                                      "type": "string"
-                                    }
-                                  },
-                                  "required": [
-                                    "start",
-                                    "end"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                "timezone": {
-                                  "type": "string"
-                                }
-                              },
-                              "required": [
-                                "days",
-                                "hours",
-                                "timezone"
-                              ],
-                              "additionalProperties": false
-                            }
-                          },
-                          "additionalProperties": false
-                        }
-                      },
-                      "required": [
-                        "group",
-                        "id",
-                        "params"
-                      ],
-                      "additionalProperties": false
-                    },
-                    "default": []
-                  },
-                  "notify_when": {
-                    "type": "string",
-                    "enum": [
-                      "onActionGroupChange",
-                      "onActiveAlert",
-                      "onThrottleInterval"
-                    ],
-                    "nullable": true,
-                    "anyOf": [
-                      {
-                        "type": "string",
-                        "enum": [
-                          "onActionGroupChange",
-                          "onActiveAlert",
-                          "onThrottleInterval"
-                        ]
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ]
-                  }
-                },
-                "required": [
-                  "name",
-                  "tags",
-                  "schedule",
-                  "params"
-                ],
-                "additionalProperties": false,
-                "description": "Update rule request",
-                "$schema": "http://json-schema.org/draft-07/schema#"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Update a rule",
-            "content": {
-              "application/json; Elastic-Api-Version=2023-10-31": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "connector_type_id": {
-                      "type": "string",
-                      "description": "The type of connector. This property appears in responses but cannot be set in requests."
-                    },
-                    "group": {
-                      "type": "string",
-                      "description": "The group name for the actions. If you don't need to group actions, set to `default`."
-                    },
-                    "id": {
-                      "type": "string",
-                      "description": "The identifier for the connector saved object."
-                    },
-                    "uuid": {
-                      "type": "string",
-                      "description": "A universally unique identifier (UUID) for the action."
-                    },
-                    "params": {
-                      "type": "object",
-                      "additionalProperties": {},
-                      "description": "The parameters for the action, which are sent to the connector. The `params` are handled as Mustache templates and passed a default set of context."
-                    }
-                  },
-                  "required": [
-                    "connector_type_id",
-                    "group",
-                    "id",
-                    "uuid",
-                    "params"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "operationId": "/api/alerting/rule/{id}#0"
-      },
       "post": {
         "requestBody": {
           "content": {
@@ -511,7 +25,9 @@
                       },
                       "rule_type_id": {
                         "type": "string",
-                        "const": ".index-threshold"
+                        "enum": [
+                          ".index-threshold"
+                        ]
                       },
                       "enabled": {
                         "type": "boolean",
@@ -528,14 +44,8 @@
                         "default": []
                       },
                       "throttle": {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "null"
-                          }
-                        ]
+                        "type": "string",
+                        "nullable": true
                       },
                       "params": {
                         "type": "object",
@@ -670,14 +180,8 @@
                                   ]
                                 },
                                 "throttle": {
-                                  "anyOf": [
-                                    {
-                                      "type": "string"
-                                    },
-                                    {
-                                      "type": "null"
-                                    }
-                                  ]
+                                  "type": "string",
+                                  "nullable": true
                                 }
                               },
                               "required": [
@@ -751,15 +255,49 @@
                                     "days": {
                                       "type": "array",
                                       "items": {
-                                        "type": "number",
-                                        "enum": [
-                                          1,
-                                          2,
-                                          3,
-                                          4,
-                                          5,
-                                          6,
-                                          7
+                                        "anyOf": [
+                                          {
+                                            "type": "number",
+                                            "enum": [
+                                              1
+                                            ]
+                                          },
+                                          {
+                                            "type": "number",
+                                            "enum": [
+                                              2
+                                            ]
+                                          },
+                                          {
+                                            "type": "number",
+                                            "enum": [
+                                              3
+                                            ]
+                                          },
+                                          {
+                                            "type": "number",
+                                            "enum": [
+                                              4
+                                            ]
+                                          },
+                                          {
+                                            "type": "number",
+                                            "enum": [
+                                              5
+                                            ]
+                                          },
+                                          {
+                                            "type": "number",
+                                            "enum": [
+                                              6
+                                            ]
+                                          },
+                                          {
+                                            "type": "number",
+                                            "enum": [
+                                              7
+                                            ]
+                                          }
                                         ]
                                       }
                                     },
@@ -808,15 +346,23 @@
                           {
                             "type": "string",
                             "enum": [
-                              "onActionGroupChange",
-                              "onActiveAlert",
-                              "onThrottleInterval"
+                              "onActionGroupChange"
                             ]
                           },
                           {
-                            "type": "null"
+                            "type": "string",
+                            "enum": [
+                              "onActiveAlert"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "onThrottleInterval"
+                            ]
                           }
-                        ]
+                        ],
+                        "nullable": true
                       }
                     },
                     "required": [
@@ -832,23 +378,31 @@
                     "type": "object",
                     "properties": {
                       "name": {
-                        "$ref": "#/anyOf/0/properties/name"
+                        "type": "string"
                       },
                       "rule_type_id": {
                         "type": "string",
-                        "const": "slo.rules.burnRate"
+                        "enum": [
+                          "slo.rules.burnRate"
+                        ]
                       },
                       "enabled": {
-                        "$ref": "#/anyOf/0/properties/enabled"
+                        "type": "boolean",
+                        "default": true
                       },
                       "consumer": {
-                        "$ref": "#/anyOf/0/properties/consumer"
+                        "type": "string"
                       },
                       "tags": {
-                        "$ref": "#/anyOf/0/properties/tags"
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "default": []
                       },
                       "throttle": {
-                        "$ref": "#/anyOf/0/properties/throttle"
+                        "type": "string",
+                        "nullable": true
                       },
                       "params": {
                         "type": "object",
@@ -879,7 +433,20 @@
                             "additionalProperties": false
                           },
                           "shortWindow": {
-                            "$ref": "#/anyOf/1/properties/params/properties/longWindow"
+                            "type": "object",
+                            "properties": {
+                              "value": {
+                                "type": "number"
+                              },
+                              "unit": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "value",
+                              "unit"
+                            ],
+                            "additionalProperties": false
                           }
                         },
                         "required": [
@@ -892,13 +459,226 @@
                         "additionalProperties": false
                       },
                       "schedule": {
-                        "$ref": "#/anyOf/0/properties/schedule"
+                        "type": "object",
+                        "properties": {
+                          "interval": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "interval"
+                        ],
+                        "additionalProperties": false
                       },
                       "actions": {
-                        "$ref": "#/anyOf/0/properties/actions"
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "group": {
+                              "type": "string"
+                            },
+                            "id": {
+                              "type": "string"
+                            },
+                            "frequency": {
+                              "type": "object",
+                              "properties": {
+                                "summary": {
+                                  "type": "boolean"
+                                },
+                                "notify_when": {
+                                  "type": "string",
+                                  "enum": [
+                                    "onActionGroupChange",
+                                    "onActiveAlert",
+                                    "onThrottleInterval"
+                                  ]
+                                },
+                                "throttle": {
+                                  "type": "string",
+                                  "nullable": true
+                                }
+                              },
+                              "required": [
+                                "summary",
+                                "notify_when",
+                                "throttle"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "params": {
+                              "type": "object",
+                              "additionalProperties": {}
+                            },
+                            "uuid": {
+                              "type": "string"
+                            },
+                            "alerts_filter": {
+                              "type": "object",
+                              "properties": {
+                                "query": {
+                                  "type": "object",
+                                  "properties": {
+                                    "kql": {
+                                      "type": "string"
+                                    },
+                                    "filters": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "query": {
+                                            "type": "object",
+                                            "additionalProperties": {}
+                                          },
+                                          "meta": {
+                                            "type": "object",
+                                            "additionalProperties": {}
+                                          },
+                                          "state$": {
+                                            "type": "object",
+                                            "properties": {
+                                              "store": {
+                                                "type": "string"
+                                              }
+                                            },
+                                            "required": [
+                                              "store"
+                                            ],
+                                            "additionalProperties": false
+                                          }
+                                        },
+                                        "required": [
+                                          "meta"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    },
+                                    "dsl": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "kql",
+                                    "filters"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                "timeframe": {
+                                  "type": "object",
+                                  "properties": {
+                                    "days": {
+                                      "type": "array",
+                                      "items": {
+                                        "anyOf": [
+                                          {
+                                            "type": "number",
+                                            "enum": [
+                                              1
+                                            ]
+                                          },
+                                          {
+                                            "type": "number",
+                                            "enum": [
+                                              2
+                                            ]
+                                          },
+                                          {
+                                            "type": "number",
+                                            "enum": [
+                                              3
+                                            ]
+                                          },
+                                          {
+                                            "type": "number",
+                                            "enum": [
+                                              4
+                                            ]
+                                          },
+                                          {
+                                            "type": "number",
+                                            "enum": [
+                                              5
+                                            ]
+                                          },
+                                          {
+                                            "type": "number",
+                                            "enum": [
+                                              6
+                                            ]
+                                          },
+                                          {
+                                            "type": "number",
+                                            "enum": [
+                                              7
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "hours": {
+                                      "type": "object",
+                                      "properties": {
+                                        "start": {
+                                          "type": "string"
+                                        },
+                                        "end": {
+                                          "type": "string"
+                                        }
+                                      },
+                                      "required": [
+                                        "start",
+                                        "end"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    "timezone": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "days",
+                                    "hours",
+                                    "timezone"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "group",
+                            "id",
+                            "params"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "default": []
                       },
                       "notify_when": {
-                        "$ref": "#/anyOf/0/properties/notify_when"
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "enum": [
+                              "onActionGroupChange"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "onActiveAlert"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "onThrottleInterval"
+                            ]
+                          }
+                        ],
+                        "nullable": true
                       }
                     },
                     "required": [
@@ -910,12 +690,519 @@
                     ],
                     "additionalProperties": false
                   }
-                ],
-                "$schema": "http://json-schema.org/draft-07/schema#"
+                ]
               }
             }
           }
-        }
+        },
+        "responses": {
+          "200": {
+            "description": "Create a rule",
+            "content": {
+              "application/json; Elastic-Api-Version=2023-10-31": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "operationId": "/api/alerting/rule/{id}#0"
+      },
+      "put": {
+        "requestBody": {
+          "content": {
+            "application/json; Elastic-Api-Version=2023-10-31": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the rule."
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "schedule": {
+                    "type": "object",
+                    "properties": {
+                      "interval": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "interval"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "throttle": {
+                    "anyOf": [
+                      {
+                        "not": {}
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ],
+                    "nullable": true
+                  },
+                  "params": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "index": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "minItems": 1
+                              }
+                            ],
+                            "description": "name of the indices to search"
+                          },
+                          "timeField": {
+                            "type": "string",
+                            "minLength": 1,
+                            "description": "field in index used for date/time"
+                          },
+                          "aggType": {
+                            "type": "string",
+                            "description": "aggregation type"
+                          },
+                          "aggField": {
+                            "type": "string",
+                            "minLength": 1,
+                            "description": "aggregation field"
+                          },
+                          "groupBy": {
+                            "type": "string",
+                            "description": "how to group"
+                          },
+                          "termField": {
+                            "type": "string",
+                            "minLength": 1,
+                            "description": "field to group on (for groupBy: top)"
+                          },
+                          "filterKuery": {
+                            "type": "string",
+                            "description": "filter field"
+                          },
+                          "termSize": {
+                            "type": "number",
+                            "minimum": 1,
+                            "description": "limit on the number of groups returned"
+                          },
+                          "timeWindowSize": {
+                            "type": "number",
+                            "minimum": 1,
+                            "description": "size of the time window for date range aggregations"
+                          },
+                          "timeWindowUnit": {
+                            "type": "string",
+                            "description": "units of the time window for date range aggregations"
+                          },
+                          "thresholdComparator": {
+                            "type": "string",
+                            "enum": [
+                              "gt",
+                              "lt",
+                              "gte",
+                              "lte",
+                              "between",
+                              "not_between"
+                            ],
+                            "description": "the comparison function to use to determine if the threshold has been met"
+                          },
+                          "threshold": {
+                            "type": "array",
+                            "items": {
+                              "type": "number"
+                            },
+                            "minItems": 1,
+                            "maxItems": 2,
+                            "description": "the values to use as the threshold"
+                          }
+                        },
+                        "required": [
+                          "index",
+                          "timeField",
+                          "aggType",
+                          "groupBy",
+                          "timeWindowSize",
+                          "timeWindowUnit",
+                          "thresholdComparator",
+                          "threshold"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "sloId": {
+                            "type": "string"
+                          },
+                          "burnRateThreshold": {
+                            "type": "number"
+                          },
+                          "maxBurnRateThreshold": {
+                            "type": "number"
+                          },
+                          "longWindow": {
+                            "type": "object",
+                            "properties": {
+                              "value": {
+                                "type": "number"
+                              },
+                              "unit": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "value",
+                              "unit"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "shortWindow": {
+                            "type": "object",
+                            "properties": {
+                              "value": {
+                                "type": "number"
+                              },
+                              "unit": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "value",
+                              "unit"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "sloId",
+                          "burnRateThreshold",
+                          "maxBurnRateThreshold",
+                          "longWindow",
+                          "shortWindow"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "group": {
+                          "type": "string"
+                        },
+                        "id": {
+                          "type": "string"
+                        },
+                        "frequency": {
+                          "type": "object",
+                          "properties": {
+                            "summary": {
+                              "type": "boolean"
+                            },
+                            "notify_when": {
+                              "type": "string",
+                              "enum": [
+                                "onActionGroupChange",
+                                "onActiveAlert",
+                                "onThrottleInterval"
+                              ]
+                            },
+                            "throttle": {
+                              "type": "string",
+                              "nullable": true
+                            }
+                          },
+                          "required": [
+                            "summary",
+                            "notify_when",
+                            "throttle"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "params": {
+                          "type": "object",
+                          "additionalProperties": {}
+                        },
+                        "uuid": {
+                          "type": "string"
+                        },
+                        "alerts_filter": {
+                          "type": "object",
+                          "properties": {
+                            "query": {
+                              "type": "object",
+                              "properties": {
+                                "kql": {
+                                  "type": "string"
+                                },
+                                "filters": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "query": {
+                                        "type": "object",
+                                        "additionalProperties": {}
+                                      },
+                                      "meta": {
+                                        "type": "object",
+                                        "additionalProperties": {}
+                                      },
+                                      "state$": {
+                                        "type": "object",
+                                        "properties": {
+                                          "store": {
+                                            "type": "string"
+                                          }
+                                        },
+                                        "required": [
+                                          "store"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    },
+                                    "required": [
+                                      "meta"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                },
+                                "dsl": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "kql",
+                                "filters"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "timeframe": {
+                              "type": "object",
+                              "properties": {
+                                "days": {
+                                  "type": "array",
+                                  "items": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          1
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          2
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          3
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          4
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          5
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          6
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          7
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                },
+                                "hours": {
+                                  "type": "object",
+                                  "properties": {
+                                    "start": {
+                                      "type": "string"
+                                    },
+                                    "end": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "start",
+                                    "end"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                "timezone": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "days",
+                                "hours",
+                                "timezone"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "group",
+                        "id",
+                        "params"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "default": []
+                  },
+                  "notify_when": {
+                    "type": "string",
+                    "enum": [
+                      "onActionGroupChange",
+                      "onActiveAlert",
+                      "onThrottleInterval"
+                    ],
+                    "nullable": true
+                  }
+                },
+                "required": [
+                  "name",
+                  "tags",
+                  "schedule",
+                  "params"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Update a rule",
+            "content": {
+              "application/json; Elastic-Api-Version=2023-10-31": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "connector_type_id": {
+                      "type": "string",
+                      "description": "The type of connector. This property appears in responses but cannot be set in requests."
+                    },
+                    "group": {
+                      "type": "string",
+                      "description": "The group name for the actions. If you don't need to group actions, set to `default`."
+                    },
+                    "id": {
+                      "type": "string",
+                      "description": "The identifier for the connector saved object."
+                    },
+                    "uuid": {
+                      "type": "string",
+                      "description": "A universally unique identifier (UUID) for the action."
+                    },
+                    "params": {
+                      "type": "object",
+                      "additionalProperties": {},
+                      "description": "The parameters for the action, which are sent to the connector. The `params` are handled as Mustache templates and passed a default set of context."
+                    }
+                  },
+                  "required": [
+                    "connector_type_id",
+                    "group",
+                    "id",
+                    "uuid",
+                    "params"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "operationId": "/api/alerting/rule/{id}#1"
+      },
+      "delete": {
+        "responses": {
+          "200": {
+            "description": "Delete a rule",
+            "content": {
+              "application/json; Elastic-Api-Version=2023-10-31": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "operationId": "/api/alerting/rule/{id}#2"
       }
     }
   },
